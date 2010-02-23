@@ -5,8 +5,9 @@
   <package name="bin">                 
     <fileset>                            
       <include name="COMPONENT/**" />      
-      <include name="*.c" />
-      <include name="*.h" />
+      <include name="src/*.c" />
+      <include name="src/*.h" />
+      <include name="include/*.h" />
       <include name="Makefile" />          
       <include name="lib/**" />        
       

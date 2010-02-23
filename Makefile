@@ -13,17 +13,13 @@ include $(MMROOT)/shared/makefiles/Make.config
 ifeq ($(DEBUG),1)
 CPPFLAGS     += -DDEBUG
 endif
-LIBOBJ        = b2r2_api
-INSTALL_LIB   = libst_b2r2.a
-INSTALL_HEADER = b2r2_api.h
-LIBNAME       = st_b2r2
+LIBOBJ        = blt_b2r2
+INSTALL_LIB   = libblt_hw.so
+INSTALL_HEADER = blt_api.h
+LIBNAME       = blt_hw
 
-todo: lib
+todo: solib
 #-------------------------------
 # Generic Rules
 #-------------------------------
 include $(MMROOT)/shared/makefiles/Make.rules
-
-
-
-
