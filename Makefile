@@ -13,12 +13,15 @@ include $(MMROOT)/shared/makefiles/Make.config
 ifeq ($(DEBUG),1)
 CPPFLAGS     += -DDEBUG
 endif
-LIBOBJ        = blt_b2r2
-INSTALL_LIB   = libblt_hw.so
+
+SOLIBNAMES    += blt_hw
+LIBOBJ_blt_hw  = blt_b2r2
+INSTALL_SOLIB  = blt_hw
+
 INSTALL_HEADER = blt_api.h
-LIBNAME       = blt_hw
 
 todo: solib
+
 #-------------------------------
 # Generic Rules
 #-------------------------------

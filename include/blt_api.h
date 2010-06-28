@@ -9,6 +9,11 @@
  *
  */
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif 
+
 #ifndef _BLT_API_H
 #define _BLT_API_H
 
@@ -615,3 +620,7 @@ int blt_query_cap(int blt_handle,
 		uint32_t *cap);
 
 #endif /* #ifdef _BLT_API_H */
+
+#ifdef __cplusplus
+}
+#endif
