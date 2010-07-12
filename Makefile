@@ -20,6 +20,10 @@ INSTALL_SOLIB  = blt_hw
 
 INSTALL_HEADER = blt_api.h
 
+ifneq ($(MMSYSTEM),android)
+FLAGS_blt_hw += -lpthread 
+endif
+
 todo: solib
 
 #-------------------------------
