@@ -12,7 +12,7 @@
 
 #ifdef __cplusplus
 extern "C" {
-#endif 
+#endif
 
 #ifndef _BLT_API_H
 #define _BLT_API_H
@@ -96,9 +96,10 @@ enum blt_fmt {
     /*BLT_FMT_YUV_411_PACKED_PLANAR = 18,*/
     /*BLT_FMT_YUV_420_PLANAR = 19,*/
     /**
-     * @brief YUV planar format, organized with three separate planes for each
-     *        color component, namely Y, U, and V. U and V pixels are
-     *        subsampled by a factor of two both horizontally and vertically.
+     * @brief YUV planar format, organized with three separate planes,
+     *        one for each color component, namely Y, U, and V.
+     *        U and V pixels are subsampled by a factor of two
+     *        both horizontally and vertically.
      *        The buffer shall contain a plane of Y, U, and V data in this
      *        order.
      */
@@ -106,9 +107,9 @@ enum blt_fmt {
     /*BLT_FMT_YUV420_SEMI_PLANAR = 21,*/
     /*BLT_FMT_YUV422_PLANAR = 22,*/
     /**
-     * @brief YUV planar format, organized with three separate planes for each
-     *        color component, namely Y, U, and V. U and V pixels are
-     *        subsampled by a factor of two horizontally.
+     * @brief YUV planar format, organized with three separate planes,
+     *        one for each color component, namely Y, U, and V.
+     *        U and V pixels are subsampled by a factor of two horizontally.
      *        The buffer shall contain a plane of Y, U, and V data in this
      *        order.
      */
@@ -198,6 +199,13 @@ enum blt_fmt {
      * @brief 8 bit per pixel alpha format
      */
     BLT_FMT_8_BIT_A8 = 0x7F000007,
+    /**
+     * @brief YUV planar format, organized with
+     * three separate planes, one for each color component, namely Y, U, and V.
+     * All planes use full resolution, there is no subsampling.
+     * The buffer shall contain a plane of Y, U, and V data in this order.
+     */
+    BLT_FMT_YUV444_PACKED_PLANAR = 0x7F000008,
 };
 
 

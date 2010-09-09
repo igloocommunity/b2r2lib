@@ -1,13 +1,15 @@
 /*
- * Copyright (C) ST-Ericsson AB 2009 - All rights reserved
- * Reproduction and Communication of this document is strictly prohibited
- * unless specifically authorized in writing by ST-Ericsson
+ * Copyright (C) ST-Ericsson SA 2010
  *
- * \file    b2r2_blt.h
- * \brief   B2R2 Blit kernel API
- * \author  ST-Ericsson
+ * ST-Ericsson B2R2 user interface
  *
+ * Author: Robert Fekete <robert.fekete@stericsson.com>
+ * Author: Paul Wannback
+ * for ST-Ericsson.
+ *
+ * License terms: GNU General Public License (GPL), version 2.
  */
+
 
 #ifndef _LINUX_VIDEO_B2R2_BLT_H
 #define _LINUX_VIDEO_B2R2_BLT_H
@@ -35,73 +37,77 @@ struct b2r2_blt_rect {
  *        Inspired by Khronos OpenMAX, please see
  *        OpenMAX IL specification for detailed descriptions of the formats
  *
- * @B2R2_BLT_FMT_UNUSED: Placeholder value when format is unknown, 
- * or specified using a vendor-specific means. 
- * @B2R2_BLT_FMT_16_BIT_ARGB4444: 16 bits per pixel ARGB format with colors 
+ * @B2R2_BLT_FMT_UNUSED: Placeholder value when format is unknown,
+ * or specified using a vendor-specific means.
+ * @B2R2_BLT_FMT_16_BIT_ARGB4444: 16 bits per pixel ARGB format with colors
  * stored as Alpha 15:12, Red 11:8, Green 7:4, and Blue 3:0.
- * @B2R2_BLT_FMT_16_BIT_ARGB1555: 16 bits per pixel ARGB format with colors 
+ * @B2R2_BLT_FMT_16_BIT_ARGB1555: 16 bits per pixel ARGB format with colors
  * stored as Alpha 15, Red 14:10, Green 9:5, and Blue 4:0.
- * @B2R2_BLT_FMT_16_BIT_RGB565: 16 bits per pixel RGB format with colors 
+ * @B2R2_BLT_FMT_16_BIT_RGB565: 16 bits per pixel RGB format with colors
  * stored as Red 15:11, Green 10:5, and Blue 4:0.
- * @B2R2_BLT_FMT_24_BIT_RGB888: 24 bits per pixel RGB format with colors 
+ * @B2R2_BLT_FMT_24_BIT_RGB888: 24 bits per pixel RGB format with colors
  * stored as Red 23:16, Green 15:8, and Blue 7:0.
- * @B2R2_BLT_FMT_32_BIT_ARGB8888: 32 bits per pixel ARGB format with colors 
+ * @B2R2_BLT_FMT_32_BIT_ARGB8888: 32 bits per pixel ARGB format with colors
  * stored as Alpha 31:24, Red 23:16, Green 15:8, and Blue 7:0.
- * @B2R2_BLT_FMT_YUV420_PACKED_PLANAR: YUV planar format, organized with 
- * three separate planes for each color component, namely Y, U, and V. 
- * U and V pixels are sub-sampled by a factor of two both horizontally and 
- * vertically. The buffer shall contain a plane of Y, U, and V data in this 
+ * @B2R2_BLT_FMT_YUV420_PACKED_PLANAR: YUV planar format, organized with
+ * three separate planes for each color component, namely Y, U, and V.
+ * U and V pixels are sub-sampled by a factor of two both horizontally and
+ * vertically. The buffer shall contain a plane of Y, U, and V data in this
  * order
- * @B2R2_BLT_FMT_YUV422_PACKED_PLANAR: YUV planar format, organized with 
- * three separate planes for each color component, namely Y, U, and V. 
- * U and V pixels are subsampled by a factor of two horizontally. 
+ * @B2R2_BLT_FMT_YUV422_PACKED_PLANAR: YUV planar format, organized with
+ * three separate planes for each color component, namely Y, U, and V.
+ * U and V pixels are subsampled by a factor of two horizontally.
  * The buffer shall contain a plane of Y, U, and V data in this order.
- * @B2R2_BLT_FMT_Y_CB_Y_CR: 16 bits per pixel YUV interleaved format organized 
+ * @B2R2_BLT_FMT_Y_CB_Y_CR: 16 bits per pixel YUV interleaved format organized
  * as YUYV (i.e., YCbYCr).
  * (Corresponds to YUV422 interleaved)
  * @B2R2_BLT_FMT_CB_Y_CR_Y: 16 bits per pixel YUV interleaved format organized
  * as UYVY (i.e., CbYCrY).
  * (Corresponds to YUV422R)
- * @B2R2_BLT_FMT_YUV420_PACKED_SEMI_PLANAR: YUV planar format, organized with 
- * a first plane containing Y pixels, and a second plane containing U and V 
- * pixels interleaved with the first U value first. U and V pixels are 
- * sub-sampled by a factor of two both horizontally and vertically. The buffer 
+ * @B2R2_BLT_FMT_YUV420_PACKED_SEMI_PLANAR: YUV planar format, organized with
+ * a first plane containing Y pixels, and a second plane containing U and V
+ * pixels interleaved with the first U value first. U and V pixels are
+ * sub-sampled by a factor of two both horizontally and vertically. The buffer
  * shall contain a plane of Y, U and V data.
  * (Same as B2R2 420 Raster 2 buffer - 420 R2B)
- * @B2R2_BLT_FMT_YUV422_PACKED_SEMI_PLANAR: YUV planar format, organized with 
- * a first plane containing Y pixels, and a second plane containing U and V 
- * pixels interleaved with the first U value first. U and V pixels are 
- * sub-sampled by a factor of two horizontally. The buffer shall contain a 
+ * @B2R2_BLT_FMT_YUV422_PACKED_SEMI_PLANAR: YUV planar format, organized with
+ * a first plane containing Y pixels, and a second plane containing U and V
+ * pixels interleaved with the first U value first. U and V pixels are
+ * sub-sampled by a factor of two horizontally. The buffer shall contain a
  * plane of Y, U and V data.
  * (Same as B2R2 422 Raster 2 buffer - 422 R2B)
- * @B2R2_BLT_FMT_32_BIT_ABGR8888: 32 bits per pixel ABGR format with colors 
+ * @B2R2_BLT_FMT_32_BIT_ABGR8888: 32 bits per pixel ABGR format with colors
  * stored as Alpha 31:24,Blue 23:16, Green 15:8, and Red 7:0.
- * @B2R2_BLT_FMT_24_BIT_ARGB8565: 24 bits per pixel ARGB format with colors 
+ * @B2R2_BLT_FMT_24_BIT_ARGB8565: 24 bits per pixel ARGB format with colors
  * stored as Alpha 23:16, Red 15:11, Green 10:5, and Blue 4:0.
- * @B2R2_BLT_FMT_24_BIT_YUV888: 24 bits per pixel YUV format with colors 
+ * @B2R2_BLT_FMT_24_BIT_YUV888: 24 bits per pixel YUV format with colors
  * stored as Y 23:16, U 15:8, and V 7:0.
- * @B2R2_BLT_FMT_32_BIT_AYUV8888: 32 bits per pixel AYUV format with colors 
+ * @B2R2_BLT_FMT_32_BIT_AYUV8888: 32 bits per pixel AYUV format with colors
  * stored as Alpha 31:24, Y 23:16, U 15:8, and V 7:0.
- * @B2R2_BLT_FMT_YUV420_PACKED_SEMIPLANAR_MB_STE: Nomadik YUV 420 macro block 
+ * @B2R2_BLT_FMT_YUV420_PACKED_SEMIPLANAR_MB_STE: Nomadik YUV 420 macro block
  * format, see B2R2 spec for details
- * @B2R2_BLT_FMT_YUV422_PACKED_SEMIPLANAR_MB_STE: Nomadik YUV 422 macro block 
+ * @B2R2_BLT_FMT_YUV422_PACKED_SEMIPLANAR_MB_STE: Nomadik YUV 422 macro block
  * format, see B2R2 spec for details
  * @B2R2_BLT_FMT_1_BIT_A1: 1 bit per pixel A format, 1 bit alpha
  * @B2R2_BLT_FMT_8_BIT_A8: 8 bit per pixel A format, 8 bit alpha
+ * @B2R2_BLT_FMT_YUV444_PACKED_PLANAR: YUV planar format, organized with
+ * three separate planes, one for each color component, namely Y, U, and V.
+ * All planes use full resolution, there is no subsampling.
+ * The buffer shall contain a plane of Y, U, and V data in this order.
  */
 enum b2r2_blt_fmt {
-    B2R2_BLT_FMT_UNUSED = 0, 
+    B2R2_BLT_FMT_UNUSED = 0,
     B2R2_BLT_FMT_16_BIT_ARGB4444 = 4,
     B2R2_BLT_FMT_16_BIT_ARGB1555 = 5,
-    B2R2_BLT_FMT_16_BIT_RGB565 = 6, //
+    B2R2_BLT_FMT_16_BIT_RGB565 = 6,
     B2R2_BLT_FMT_24_BIT_RGB888 = 11,
     B2R2_BLT_FMT_32_BIT_ARGB8888 = 16,
     B2R2_BLT_FMT_YUV420_PACKED_PLANAR = 20,
     B2R2_BLT_FMT_YUV422_PACKED_PLANAR = 23,
     B2R2_BLT_FMT_Y_CB_Y_CR = 25,
     B2R2_BLT_FMT_CB_Y_CR_Y = 27,
-    B2R2_BLT_FMT_YUV420_PACKED_SEMI_PLANAR=39,
-    B2R2_BLT_FMT_YUV422_PACKED_SEMI_PLANAR=40,
+    B2R2_BLT_FMT_YUV420_PACKED_SEMI_PLANAR = 39,
+    B2R2_BLT_FMT_YUV422_PACKED_SEMI_PLANAR = 40,
     /* Extensions, non OpenMAX formats */
     B2R2_BLT_FMT_32_BIT_ABGR8888 = 0x7F000000, /* OpenMax vendor start */
     B2R2_BLT_FMT_24_BIT_ARGB8565 = 0x7F000001,
@@ -111,6 +117,7 @@ enum b2r2_blt_fmt {
     B2R2_BLT_FMT_YUV422_PACKED_SEMIPLANAR_MB_STE = 0x7F000005,
     B2R2_BLT_FMT_1_BIT_A1 = 0x7F000006,
     B2R2_BLT_FMT_8_BIT_A8 = 0x7F000007,
+    B2R2_BLT_FMT_YUV444_PACKED_PLANAR = 0x7F000008,
 };
 
 /**
@@ -124,15 +131,12 @@ enum b2r2_blt_fmt {
  *    Use offset as a physical address
  * @B2R2_BLT_PTR_FD_OFFSET:
  *    Use fd + offset to determine the userspace virtual address.
- * @B2R2_BLT_PTR_GEM:
- *    Use fd + offset as a GEM address
  */
 enum b2r2_blt_ptr_type {
 	B2R2_BLT_PTR_NONE,
 	B2R2_BLT_PTR_VIRTUAL,
 	B2R2_BLT_PTR_PHYSICAL,
 	B2R2_BLT_PTR_FD_OFFSET,
-	B2R2_BLT_PTR_GEM,
 };
 
 /**
@@ -195,9 +199,9 @@ struct b2r2_blt_img {
  *    Flip vertically and then rotate 90 degrees counter clockwise
  */
 enum b2r2_blt_transform {
-	B2R2_BLT_TRANSFORM_NONE             = 0,
-	B2R2_BLT_TRANSFORM_FLIP_H           = 1,
-	B2R2_BLT_TRANSFORM_FLIP_V           = 2,
+	B2R2_BLT_TRANSFORM_NONE              = 0,
+	B2R2_BLT_TRANSFORM_FLIP_H            = 1,
+	B2R2_BLT_TRANSFORM_FLIP_V            = 2,
 	B2R2_BLT_TRANSFORM_CCW_ROT_90        = 4,
 	B2R2_BLT_TRANSFORM_CCW_ROT_180       = 3,
 	B2R2_BLT_TRANSFORM_CCW_ROT_270       = 7,
@@ -221,7 +225,7 @@ enum b2r2_blt_transform {
  * @B2R2_BLT_FLAG_GLOBAL_ALPHA_BLEND:
  *    Enable global alpha blend (alpha value in global_alpha)
  * @B2R2_BLT_FLAG_SOURCE_COLOR_KEY:
- *    Enable source color key (color in src_color). Color should be in raw 
+ *    Enable source color key (color in src_color). Color should be in raw
  *    format.
  *    B2R2_BLT_FLAG_SOURCE_COLOR_KEY, B2R2_BLT_FLAG_SOURCE_FILL and
  *    B2R2_BLT_FLAG_SOURCE_FILL_RAW cannot be specified at the same time.
@@ -272,6 +276,9 @@ enum b2r2_blt_flag {
 	B2R2_BLT_FLAG_SOURCE_MASK           = 0x800,
 	B2R2_BLT_FLAG_DESTINATION_CLIP      = 0x1000,
 	B2R2_BLT_FLAG_INHERIT_PRIO          = 0x2000,
+	B2R2_BLT_FLAG_SRC_NO_CACHE_FLUSH    = 0x4000,
+	B2R2_BLT_FLAG_SRC_MASK_NO_CACHE_FLUSH = 0x8000,
+	B2R2_BLT_FLAG_DST_NO_CACHE_FLUSH    = 0x10000,
 	B2R2_BLT_FLAG_REPORT_WHEN_DONE      = 0x20000000,
 	B2R2_BLT_FLAG_REPORT_PERFORMANCE    = 0x40000000,
 };
@@ -280,7 +287,7 @@ enum b2r2_blt_flag {
 /**
  * struct b2r2_blt_req - Specifies a request to B2R2
  *
- * @size: Size of this structure. Used for versioning. MUST be specified. 
+ * @size: Size of this structure. Used for versioning. MUST be specified.
  * @flags: Flags that control the B2R2 request ORed together
  * @tfm: How source should be flipped and rotated when blitting
  * @prio: Priority (-20 to 19). Inherits process prio
@@ -290,12 +297,12 @@ enum b2r2_blt_flag {
  * @src_mask: Source mask. Not used if source fill.
  * @src_rect: Source area to be blitted.
  * @src_color: Source fill color or color key
- * @dst_img: Destination image. Not used if source fill.
+ * @dst_img: Destination image.
  * @dst_rect: Destination area to be blitted to.
  * @dst_color: Destination color key
  * @dst_clip_rect: Destination clip rectangle.
  * @global_alpha: Global alpha value (0 - 255)
- * @report1: Data 1 to report back when request is done. 
+ * @report1: Data 1 to report back when request is done.
  *           See struct b2r2_blt_report.
  * @report2: Data 2 to report back when request is done.
  *           See struct b2r2_blt_report.
@@ -320,40 +327,40 @@ struct b2r2_blt_req {
 };
 
 /**
- * enum b2r2_blt_cap -  Capabilities that can be queried for. 
+ * enum b2r2_blt_cap -  Capabilities that can be queried for.
  *
- * Capabilities can be queried for a specific format or for formats in 
+ * Capabilities can be queried for a specific format or for formats in
  * general. To query for capabilities in general, specify BLT_FMT_UNUSED
- * as format. 
+ * as format.
  *
  * B2R2_BLT_CAP_UNUSED: Unused/unspecified capability
  * B2R2_BLT_CAP_FMT_SOURCE: Is format supported as source?
  * B2R2_BLT_CAP_FMT_SOURCE_MASK: Is format supported as source mask?
  * B2R2_BLT_CAP_FMT_DEST: Is format supported as dest?
- * B2R2_BLT_CAP_PER_PIXEL_ALPHA_BLEND: Is per pixel alpha blending supported 
+ * B2R2_BLT_CAP_PER_PIXEL_ALPHA_BLEND: Is per pixel alpha blending supported
  * with format as source
- * B2R2_BLT_CAP_GLOBAL_ALPHA_BLEND: Is per global alpha blending supported 
+ * B2R2_BLT_CAP_GLOBAL_ALPHA_BLEND: Is per global alpha blending supported
  * with format as source
- * B2R2_BLT_CAP_SOURCE_COLOR_KEY: Is source color key supported with format as 
+ * B2R2_BLT_CAP_SOURCE_COLOR_KEY: Is source color key supported with format as
  * source
  * B2R2_BLT_CAP_SOURCE_FILL: Is source fill supported with format as source
- * B2R2_BLT_CAP_SOURCE_FILL_RAW: Is source fill raw supported with format as 
+ * B2R2_BLT_CAP_SOURCE_FILL_RAW: Is source fill raw supported with format as
  * dest
  * B2R2_BLT_CAP_DEST_COLOR_KEY: Is dest color key supported with format as dest
  * B2R2_BLT_CAP_DITHER: Is dithering supported with format as source
  * B2R2_BLT_CAP_BLUR: Is blur supported with format as source
  * B2R2_BLT_CAP_MINIFICATION_LIMIT: Minification limit (copybit support)
  * B2R2_BLT_CAP_MAGNIFICATION_LIMIT: Magnification limit (copybit support)
- * B2R2_BLT_CAP_SCALING_FRAC_BITS: Number of scaling fractional bits (copybit 
+ * B2R2_BLT_CAP_SCALING_FRAC_BITS: Number of scaling fractional bits (copybit
  * support)
- * B2R2_BLT_CAP_ROTATION_STEP_DEG: Supported rotation step in degrees (copybit 
+ * B2R2_BLT_CAP_ROTATION_STEP_DEG: Supported rotation step in degrees (copybit
  * support)
  */
 
 enum b2r2_blt_cap {
     B2R2_BLT_CAP_UNUSED = 0,
     /**
-     * @brief Is format supported as source. 
+     * @brief Is format supported as source.
      */
     B2R2_BLT_CAP_FMT_SOURCE,
     /**
@@ -434,7 +441,7 @@ struct b2r2_blt_query_cap {
  * This structure can be read from B2R2 driver if B2R2_BLT_FLAG_REPORT_WHEN_DONE
  * flag was specified when the request was issued.
  *
- * @request_id: The id for the request, same as reported from blt_request 
+ * @request_id: The id for the request, same as reported from blt_request
  * @report1: Client data specified in struct blt_request
  * @report2: Client data specified in struct blt_request
  * @usec_elapsed: Number of microseconds needed to perform this blit
@@ -452,7 +459,7 @@ struct b2r2_blt_report {
 /**
  * B2R2 BLT driver is used in the following way:
  *
- * Obtain a file descriptor to the driver: 
+ * Obtain a file descriptor to the driver:
  *        fd = open("/dev/b2r2_blt", O_RDWR);
  *
  * Issue requests:
@@ -476,7 +483,7 @@ struct b2r2_blt_report {
  *
  * Read report data from driver
  *        struct b2r2_blt_report blt_report;
- *        
+ *
  *        nread = read(fd, &blt_report, sizeof(blt_report));
  *
  * Close the driver
@@ -508,7 +515,7 @@ struct b2r2_blt_report {
 /**
  * The B2R2_BLT_SYNC_IOC waits for all or a specified request to be finished.
  *
- * Supplied parameter shall be a request id previously returned by 
+ * Supplied parameter shall be a request id previously returned by
  * B2R2_BLT_IOC or 0 for all requests.
  *
  * Returns 0 if OK, else a negative error code
@@ -517,7 +524,7 @@ struct b2r2_blt_report {
 #define B2R2_BLT_SYNCH_IOC  _IOW(B2R2_BLT_IOC_MAGIC, 2, int)
 
 /**
- * The BLT_QUERY_CAP_IOC returns capability information for all or 
+ * The BLT_QUERY_CAP_IOC returns capability information for all or
  *                       for a certain format
  *
  * Supplied parameter shall be a pointer to a struct b2r2_blt_query_cap.
