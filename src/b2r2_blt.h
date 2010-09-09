@@ -260,6 +260,34 @@ enum b2r2_blt_transform {
  *    to implement callback functionality)
  * @B2R2_BLT_FLAG_REPORT_PERFORMANCE
  *    Include performance data in the report structure
+ * @B2R2_BLT_FLAG_CLUT_COLOR_CORRECTION
+ *    Use color look-up table for color correction.
+ *    Pointer to the table must be specified in *clut field of
+ *    the b2r2_blt_req structure.
+ *    The table must map all input color values
+ *    for each channel to the desired output values.
+ *    It is an array with the following format:
+ *    R0 G0 B0 A0 R1 G1 B1 A1...R255 G255 B255 A255
+ *    where R0 is the 8 bit output value for red channel whenever its input
+ *    equals 0.
+ *    Similarly, R1 through R255 are the red channel outputs whenever
+ *    the channel's inputs equal 1 through 255 respectively.
+ *    Gn, Bn, An denote green, blue and alpha channel.
+ *    Whenever the input bitmap format lacks the alpha channel,
+ *    all alpha values in the color correction table should be set to 255.
+ *    Size of the array that specifies the color correction table
+ *    must be 1024 bytes.
+ *    A table that does not change anything has the form:
+ *    0 0 0 0 1 1 1 1 2 2 2 2 ... 254 254 254 254 255 255 255 255.
+ *    CLUT color correction can be applied to YUV raster buffers as well,
+ *    in which case the RGB color channels are mapped onto YUV-space
+ *    as follows:
+ *    R = red chrominance
+ *    G = luminance
+ *    B = blue chrominance
+ *    A = alpha
+ *    If any of the planar or semi-planar formats is used, luminance cannot
+ *    be changed by the color correction table.
  */
 enum b2r2_blt_flag {
 	B2R2_BLT_FLAG_ASYNCH                = 0x1,
@@ -281,6 +309,7 @@ enum b2r2_blt_flag {
 	B2R2_BLT_FLAG_DST_NO_CACHE_FLUSH    = 0x10000,
 	B2R2_BLT_FLAG_REPORT_WHEN_DONE      = 0x20000000,
 	B2R2_BLT_FLAG_REPORT_PERFORMANCE    = 0x40000000,
+	B2R2_BLT_FLAG_CLUT_COLOR_CORRECTION = 0x80000000
 };
 
 
@@ -293,6 +322,7 @@ enum b2r2_blt_flag {
  * @prio: Priority (-20 to 19). Inherits process prio
  *        if B2R2_BLT_FLAG_INHERIT_PRIO. Given priority is mapped onto B2R2.
  *        TBD: How?
+ * @clut: Pointer to the look-up table for color correction.
  * @src_img: Source image. Not used if source fill.
  * @src_mask: Source mask. Not used if source fill.
  * @src_rect: Source area to be blitted.
@@ -313,6 +343,7 @@ struct b2r2_blt_req {
 	enum   b2r2_blt_flag      flags;
 	enum   b2r2_blt_transform transform;
 	__s32                     prio;
+	void                      *clut;
 	struct b2r2_blt_img       src_img;
 	struct b2r2_blt_img       src_mask;
 	struct b2r2_blt_rect      src_rect;

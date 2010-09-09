@@ -410,6 +410,36 @@ enum blt_flag {
      * @brief Inherit process priority.
      */
     BLT_FLAG_INHERIT_PRIO          = 0x2000,
+    /**
+     * @brief Use color look-up table for color correction.
+     * Pointer to the table must be specified in *clut field of
+     * the b2r2_blt_req structure.
+     * The table must map all input color values
+     * for each channel to the desired output values.
+     * It is an array with the following format:
+     * R0 G0 B0 A0 R1 G1 B1 A1...R255 G255 B255 A255
+     * where R0 is the 8 bit output value for red channel whenever its input
+     * equals 0.
+     * Similarly, R1 through R255 are the red channel outputs whenever
+     * the channel's inputs equal 1 through 255 respectively.
+     * Gn, Bn, An denote green, blue and alpha channel.
+     * Whenever the input bitmap format lacks the alpha channel,
+     * all alpha values in the color correction table should be set to 255.
+     * Size of the array that specifies the color correction table
+     * must be 1024 bytes.
+     * A table that does not change anything has the form:
+     * 0 0 0 0 1 1 1 1 2 2 2 2 ... 254 254 254 254 255 255 255 255.
+     * CLUT color correction can be applied to YUV raster buffers as well,
+     * in which case the RGB color channels are mapped onto YUV-space
+     * as follows:
+     * R = red chrominance
+     * G = luminance
+     * B = blue chrominance
+     * A = alpha
+     * If any of the planar or semi-planar formats is used, luminance cannot
+     * be changed by the color correction table.
+     */
+    BLT_FLAG_CLUT_COLOR_CORRECTION = 0x80000000
 };
 
 /**
@@ -434,6 +464,10 @@ struct blt_req {
      * TBD: How?
      */
     int32_t               prio;
+    /**
+     * @brief Pointer to the look-up table for color correction.
+     */
+	void                  *clut;
     /**
      * @brief Source image. Ignored when source fill is specified.
      */
