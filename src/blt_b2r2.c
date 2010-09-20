@@ -21,7 +21,7 @@
 #include <string.h>
 #include <unistd.h>
 
-#include "b2r2_blt.h"
+#include <video/b2r2_blt.h>
 
 #define LOG_TAG "libblt_hw"
 

@@ -226,13 +226,13 @@ enum blt_ptr_type {
      */
     BLT_PTR_PHYSICAL,
     /**
-     * @brief Use fd and offset to determine the userspace virtual address.
+     * @brief Use fd and offset to determine buffer location.
      */
     BLT_PTR_FD_OFFSET,
     /**
-     * @brief GEM address
+     * @brief Use hwmem_buf_name and offset to determine buffer location.
      */
-    BLT_PTR_GEM,
+    BLT_PTR_HWMEM_BUF_NAME_OFFSET,
 };
 
 /**
@@ -244,12 +244,18 @@ struct blt_buf {
      */
     enum blt_ptr_type  type;
     /**
+     * @brief Hwmem buffer name.
+     */
+    int32_t            hwmem_buf_name;
+    /**
      * @brief File descriptor (e.g. file handle to a pmem device)
      */
     int32_t            fd;
     /**
-     * @brief Offset in file. If 'type' is set to BLT_PTR_VIRTUAL,
-	 * then the offset is interpreted as plain userspace virtual address
+     * @brief Offset where buffer can be found. When used in 
+     * conjunction with a hwmem buffer the offset must be a multiple 
+     * of the image size. If 'type' is set to BLT_PTR_VIRTUAL or 
+     * BLT_PTR_PHYSICAL, then the offset is interpreted as an address. 
      */
     uint32_t           offset;
     /**
@@ -259,8 +265,8 @@ struct blt_buf {
 	/**
 	 * @brief Pointer to the bitmap data. This field can be used to specify
 	 * an alternative way to access the buffer. Whenever the 'bits' pointer
-	 * is set to non-NULL, the underlying implementation
-	 * is free to decide whether or not to use it in favor of 'fd' and/or 'offset'.
+	 * is set to non-NULL, the underlying implementation is free to decide 
+     * whether or not to use it in favor of other ways to locate the buffer.
 	 */
 	void *bits;
 };
