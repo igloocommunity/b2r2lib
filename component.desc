@@ -1,0 +1,15 @@
+------------------------------------------------------------
+Component: linux_b2r2lib
+------------------------------------------------------------
+Id ...... linux_b2r2lib:generic:1.0.13:src
+Date .... 2010-12-15T11:29:51+0100
+Content . 6 file(s), 3 directory(ies), 0 symlink(s)
+
+Manifest
+
+d00b4516557aa5ef8927267d8fec067a Android.mk
+297a96bfe3db6b02fd3b018ce4483863 Makefile
+d328e160866df0a5d90f399fae454676 include/blt_api.h
+1d86cd442a3e6c8f6095d13df35726e8 src/blt_b2r2.c
+15d69eed5d892b63f52ca860b0b694c7 ste-info/toc-locations.xml
+f850f17e8730d9a843db21dc749ed6dd ste-info/userspace_std_api_b2r2lib.xml

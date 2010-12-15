@@ -218,14 +218,10 @@ enum blt_ptr_type {
      */
     BLT_PTR_NONE,
     /**
-     * @deprecated Not supported, will be removed
-     *
      * @brief Use offset as a userspace virtual address
      */
     BLT_PTR_VIRTUAL,
     /**
-     * @deprecated Will be removed
-     *
      * @brief Use offset as a physical address
      */
     BLT_PTR_PHYSICAL,
@@ -256,9 +252,10 @@ struct blt_buf {
      */
     int32_t            fd;
     /**
-     * @brief Offset where buffer can be found. If 'type' is set to
-     * BLT_PTR_VIRTUAL or BLT_PTR_PHYSICAL, then the offset is interpreted as
-     * an address.
+     * @brief Offset where buffer can be found. When used in 
+     * conjunction with a hwmem buffer the offset must be a multiple 
+     * of the image size. If 'type' is set to BLT_PTR_VIRTUAL or 
+     * BLT_PTR_PHYSICAL, then the offset is interpreted as an address. 
      */
     uint32_t           offset;
     /**
