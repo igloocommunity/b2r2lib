@@ -218,7 +218,7 @@ int blt_request(int blt_handle, struct blt_req *req)
         req->flags |= B2R2_BLT_FLAG_REPORT_PERFORMANCE;
 #endif
 
-        if (data->callback_thread != -1) {
+        if (data->callback_thread == -1) {
             /* Start a thread to wait for the requests to complete */
             pthread_create(&data->callback_thread, NULL, callback_thread_run,
                         (void *)data->fd);
