@@ -206,6 +206,45 @@ enum blt_fmt {
      * The buffer shall contain a plane of Y, U, and V data in this order.
      */
     BLT_FMT_YUV444_PACKED_PLANAR = 0x7F000008,
+    /**
+     * @brief YVU planar format, organized with a first plane containing Y
+     *        pixels, and a second plane containing V and U pixels interleaved
+     *        with the first V value first. V and U pixels are subsampled by
+     *        a factor of two both horizontally and vertically. The buffer
+     *        shall contain two planes, one with Y, and one with V and U data.
+     *        (Same as B2R2 420 Raster 2 buffer - 420 R2B except that chroma
+     *        order is swapped.)
+     */
+    BLT_FMT_YVU420_PACKED_SEMI_PLANAR = 0x7F000009,
+    /**
+     * @brief YVU planar format, organized with a first plane containing Y
+     *        pixels, and a second plane containing V and U pixels interleaved
+     *        with the first V value first. V and U pixels are subsampled by
+     *        a factor of two both horizontally. The buffer shall contain
+     *        two planes, one with Y, and one with V and U data.
+     *        (Same as B2R2 422 Raster 2 buffer - 422 R2B except that chroma
+     *        order is swapped.)
+     */
+    BLT_FMT_YVU422_PACKED_SEMI_PLANAR = 0x7F00000A,
+    /**
+     * @brief YVU planar format, organized with three separate planes,
+     *        one for each color component, namely Y, V, and U.
+     *        V and U pixels are subsampled by a factor of two
+     *        both horizontally and vertically.
+     *        The buffer shall contain a plane of Y, V, and U data in this
+     *        order. (Same as BLT_FMT_YUV420_PACKED_PLANAR, except that chroma
+     *        order is swapped.)
+     */
+    BLT_FMT_YVU420_PACKED_PLANAR = 0x7F00000B,
+    /**
+     * @brief YVU planar format, organized with three separate planes,
+     *        one for each color component, namely Y, V, and U.
+     *        V and U pixels are subsampled by a factor of two horizontally.
+     *        The buffer shall contain a plane of Y, V, and U data in this
+     *        order. (Same as BLT_FMT_YUV422_PACKED_PLANAR except that chroma
+     *        order is swapped.)
+     */
+    BLT_FMT_YVU422_PACKED_PLANAR = 0x7F00000C,
 };
 
 
