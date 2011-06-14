@@ -115,7 +115,7 @@ static struct blt_b2r2_data *get_data(int handle) {
 }
 
 static void free_handle(int handle) {
-    if (handle < data_count && handle > 0) {
+    if (handle < data_count && handle >= 0) {
         datas[handle] = NULL;
     }
 }
@@ -195,6 +195,7 @@ void blt_close(int blt_handle)
         goto out;
 
     close(data->fd);
+    free_handle(blt_handle);
     free(data);
 
 out:
