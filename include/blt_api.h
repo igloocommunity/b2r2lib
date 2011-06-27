@@ -245,6 +245,16 @@ enum blt_fmt {
      *        order is swapped.)
      */
     BLT_FMT_YVU422_PACKED_PLANAR = 0x7F00000C,
+    /**
+     * @brief 24 bits per pixel VUY format with colors stored as
+     *        V 23:16, U 15:8, and Y 7:0.
+     */
+    BLT_FMT_24_BIT_VUY888 = 0x7F00000D,
+    /**
+     * @brief 32 bits per pixel VUYA format with colors stored as
+     *        V 31:24, U 23:16, Y 15:8, and Alpha 7:0.
+     */
+    BLT_FMT_32_BIT_VUYA8888 = 0x7F00000E,
 };
 
 
