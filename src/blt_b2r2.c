@@ -123,28 +123,44 @@ static void free_handle(int handle) {
 static void *callback_thread_run(void *arg)
 {
     while (1) {
+        int result;
         struct pollfd fds;
         struct b2r2_blt_report report;
 
         fds.fd = (int)arg;
         fds.events = POLLIN;
 
-        if (poll(&fds, 1, -1) <= 0) {
-            /* We assume that this is because the device was closed */
-            pthread_exit(NULL);
-            break;
-        } else {
-            ssize_t count;
-
-            memset(&report, 0, sizeof(report));
-            count = read(fds.fd, &report, sizeof(report));
-            if (count < 0) {
-                LOGE2("Could not read report from b2r2 device (%s)",
+        result = poll(&fds, 1, -1);
+        switch (result) {
+            case 0:
+                /* timeout occurred */
+                pthread_exit(NULL);
+                break;
+            case -1:
+                /* We assume that this is because the device was closed */
+                LOGE2("poll returned (%s)",
                         strerror(errno));
-            } else if (report.report1 != 0) {
-                void (*callback)(int, uint32_t) = (void*)report.report1;
-                callback(report.request_id, (uint32_t)report.report2);
-            }
+                pthread_exit(NULL);
+                break;
+            default:
+                if (fds.revents & POLLIN) {
+                    ssize_t count;
+                    memset(&report, 0, sizeof(report));
+                    count = read(fds.fd, &report, sizeof(report));
+                    if (count < 0) {
+                        LOGE2("Could not read report from b2r2 device (%s)",
+                                strerror(errno));
+                    } else if (report.report1 != 0) {
+                        void (*callback)(int, uint32_t) = (void*)report.report1;
+                        callback(report.request_id, (uint32_t)report.report2);
+                    }
+                } else {
+                    /* We assume that this is because the device was closed */
+                     LOGE2("Other event than POLLIN (%s)",
+                        strerror(errno));
+                     pthread_exit(NULL);
+                }
+                break;
         }
     }
     return NULL;
