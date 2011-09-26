@@ -1,0 +1,21 @@
+Source: b2r2lib
+Priority: extra
+Maintainer: packages@igloocommunity.org
+Build-Depends: debhelper (>= 7.0.50~)
+Standards-Version: 3.9.1
+Section: libs
+Homepage: http://www.igloocommunity.org
+
+Package: b2r2lib-dev
+Section: libdevel
+Architecture: any
+Depends: b2r2lib (= ${binary:Version})
+Description: Development package to b2r2lib.
+ 
+Package: b2r2lib
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Hardware blit library for 2D graphics acceleration.
+ B2R2 is a hardware block which blits, blends, rotates and resizes graphics buffers with various pixel formats.
+ Simple library with a 1:1 mapping to the kernel b2r2 api. 
