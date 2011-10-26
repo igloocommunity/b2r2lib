@@ -32,6 +32,7 @@
 #else
 #  define LOGE(format) fprintf(stderr, LOG_TAG format "\n")
 #  define LOGE2(format, ...) fprintf(stderr, LOG_TAG format "\n", __VA_ARGS__)
+#  define LOGI(format) printf(LOG_TAG format "\n")
 #  define LOGI2(format, ...) printf(LOG_TAG format "\n", __VA_ARGS__)
 #endif
 
@@ -122,6 +123,12 @@ static void free_handle(int handle) {
 
 static void *callback_thread_run(void *arg)
 {
+    /*
+     * The resources consumed by this thread will be freed immediately when
+     * this thread is terminated
+     */
+    pthread_detach(pthread_self());
+
     while (1) {
         int result;
         struct pollfd fds;
@@ -130,7 +137,7 @@ static void *callback_thread_run(void *arg)
         fds.fd = (int)arg;
         fds.events = POLLIN;
 
-        result = poll(&fds, 1, -1);
+        result = poll(&fds, 1, 3000);
         switch (result) {
             case 0:
                 /* timeout occurred */
@@ -154,11 +161,15 @@ static void *callback_thread_run(void *arg)
                         void (*callback)(int, uint32_t) = (void*)report.report1;
                         callback(report.request_id, (uint32_t)report.report2);
                     }
+                } else if (fds.revents & POLLNVAL) {
+                    /* fd not open, device must have been closed */
+                    LOGI("Device closed. Callback thread terminated.\n");
+                    pthread_exit(NULL);
                 } else {
-                    /* We assume that this is because the device was closed */
-                     LOGE2("Other event than POLLIN (%s)",
-                        strerror(errno));
-                     pthread_exit(NULL);
+                    LOGE2("Unexpected event. Callback thread will exit. "
+                        "errno=(%s) result=%d revents=0x%x",
+                        strerror(errno), result, fds.revents);
+                    pthread_exit(NULL);
                 }
                 break;
         }
