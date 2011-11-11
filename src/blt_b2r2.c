@@ -38,9 +38,19 @@
 
 #define B2R2_BLT_DEV "/dev/b2r2_blt"
 
+enum thread_event {
+    EVENT_NONE = 0,
+    EVENT_HANDLE_TERMINATED = 1,
+    EVENT_REQUEST_CALLBACK = 2
+};
+
 struct blt_b2r2_data {
     int fd;
     pthread_t callback_thread;
+    pthread_cond_t event_cond;
+    pthread_mutex_t event_mutex;
+    volatile enum thread_event event;
+    volatile int number_reports;
 };
 
 #define DATAS_START_SIZE 10
@@ -123,57 +133,49 @@ static void free_handle(int handle) {
 
 static void *callback_thread_run(void *arg)
 {
-    /*
-     * The resources consumed by this thread will be freed immediately when
-     * this thread is terminated
-     */
-    pthread_detach(pthread_self());
+    struct blt_b2r2_data *data = (struct blt_b2r2_data *) arg;
+    int number_reports = 0;
 
     while (1) {
-        int result;
-        struct pollfd fds;
+        enum thread_event event;
         struct b2r2_blt_report report;
 
-        fds.fd = (int)arg;
-        fds.events = POLLIN;
+        /* Read parent command */
+        pthread_mutex_lock(&data->event_mutex);
+        if (data->event == EVENT_NONE)
+            pthread_cond_wait(&data->event_cond, &data->event_mutex);
+        event = data->event;
+        number_reports += data->number_reports;
+        data->event = EVENT_NONE;
+        data->number_reports = 0;
+        pthread_mutex_unlock(&data->event_mutex);
 
-        result = poll(&fds, 1, 3000);
-        switch (result) {
-            case 0:
-                /* timeout occurred */
-                pthread_exit(NULL);
-                break;
-            case -1:
-                /* We assume that this is because the device was closed */
-                LOGE2("poll returned (%s)",
-                        strerror(errno));
-                pthread_exit(NULL);
-                break;
-            default:
-                if (fds.revents & POLLIN) {
-                    ssize_t count;
-                    memset(&report, 0, sizeof(report));
-                    count = read(fds.fd, &report, sizeof(report));
-                    if (count < 0) {
-                        LOGE2("Could not read report from b2r2 device (%s)",
-                                strerror(errno));
-                    } else if (report.report1 != 0) {
-                        void (*callback)(int, uint32_t) = (void*)report.report1;
-                        callback(report.request_id, (uint32_t)report.report2);
-                    }
-                } else if (fds.revents & POLLNVAL) {
-                    /* fd not open, device must have been closed */
-                    LOGI("Device closed. Callback thread terminated.\n");
-                    pthread_exit(NULL);
-                } else {
-                    LOGE2("Unexpected event. Callback thread will exit. "
-                        "errno=(%s) result=%d revents=0x%x",
-                        strerror(errno), result, fds.revents);
-                    pthread_exit(NULL);
-                }
-                break;
+        while (number_reports > 0) {
+            ssize_t count;
+            memset(&report, 0, sizeof(report));
+            count = read(data->fd, &report, sizeof(report));
+            if (count < 0) {
+                LOGE2("Pt%d: Could not read report from b2r2 (%s)",
+                    data->fd, strerror(errno));
+                goto thread_exit;
+            } else if (report.report1 != 0) {
+                void (*callback)(int, uint32_t) = (void*)report.report1;
+                callback(report.request_id, (uint32_t)report.report2);
+                number_reports--;
+            }
+        }
+
+        if (event == EVENT_HANDLE_TERMINATED) {
+            goto thread_exit;
         }
     }
+
+thread_exit:
+    if (number_reports) {
+        LOGE2("Pt%d: Exit with outstanding reports: %d",
+            data->fd, number_reports);
+    }
+
     return NULL;
 }
 
@@ -199,12 +201,19 @@ int blt_open(void)
 
     data->fd = fd;
     data->callback_thread = -1;
+    data->event = EVENT_NONE;
+    data->number_reports = 0;
+    pthread_cond_init(&data->event_cond, NULL);
+    pthread_mutex_init(&data->event_mutex, NULL);
 
     handle = get_handle(data);
     if (handle < 0)
         goto error_free;
 
-    LOGI2("Library opened (handle = %d)", handle);
+    pthread_create(&data->callback_thread, NULL, callback_thread_run,
+            (void *)data);
+
+    LOGI2("Library opened (handle = %d, fd = %d)", handle, fd);
 
     return handle;
 
@@ -221,10 +230,22 @@ void blt_close(int blt_handle)
     if (data == NULL)
         goto out;
 
+    if (data->callback_thread > 0) {
+        pthread_mutex_lock(&data->event_mutex);
+        data->event = EVENT_HANDLE_TERMINATED;
+        pthread_cond_signal(&data->event_cond);
+        pthread_mutex_unlock(&data->event_mutex);
+        pthread_join(data->callback_thread, NULL);
+    }
+
+    pthread_mutex_destroy(&data->event_mutex);
+    pthread_cond_destroy(&data->event_cond);
     close(data->fd);
+
+    LOGI2("Library closed (handle = %d, fd = %d)",
+            blt_handle, data->fd);
     free_handle(blt_handle);
     free(data);
-
 out:
     return;
 }
@@ -245,17 +266,21 @@ int blt_request(int blt_handle, struct blt_req *req)
 #ifdef BLT_B2R2_DEBUG_PERFORMANCE
         req->flags |= B2R2_BLT_FLAG_REPORT_PERFORMANCE;
 #endif
-
-        if (data->callback_thread == -1) {
-            /* Start a thread to wait for the requests to complete */
-            pthread_create(&data->callback_thread, NULL, callback_thread_run,
-                        (void *)data->fd);
-        }
     }
 
     ret = ioctl(data->fd, B2R2_BLT_IOC, (struct b2r2_blt_req *) req);
     if (ret < 0)
         goto out;
+
+    if (req->callback != NULL) {
+        /* Tell callback worker that there will be a report
+         * to read */
+        pthread_mutex_lock(&data->event_mutex);
+        data->event = EVENT_REQUEST_CALLBACK;
+        data->number_reports++;
+        pthread_cond_signal(&data->event_cond);
+        pthread_mutex_unlock(&data->event_mutex);
+    }
 
 out:
     return ret;
