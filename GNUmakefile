@@ -21,8 +21,8 @@ install:
 	mkdir -p $(DESTDIR)/usr/lib
 	find . -name "*.so*"
 	cp *.so* $(DESTDIR)/usr/lib/
-	ln -s $(DESTDIR)/usr/lib/libblt_hw.so.1.0 $(DESTDIR)/usr/lib/libblt_hw.so.1
-	ln -s $(DESTDIR)/usr/lib/libblt_hw.so.1 $(DESTDIR)/usr/lib/libblt_hw.so
+	ln -s /usr/lib/libblt_hw.so.1.0 $(DESTDIR)/usr/lib/libblt_hw.so.1
+	ln -s /usr/lib/libblt_hw.so.1 $(DESTDIR)/usr/lib/libblt_hw.so
 
 	mkdir -p $(DESTDIR)/usr/include
 	cp $(IDIR)/*.h $(DESTDIR)/usr/include
