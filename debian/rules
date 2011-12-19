@@ -8,7 +8,7 @@
 
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
-export KDIR=/usr/src/linux-headers-$(shell uname -r)/include
+export KDIR=$(shell ls -d -1 /usr/src/linux-headers-*-ux500 | tail -1)/include
 
 %:
 	dh $@ 
