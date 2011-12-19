@@ -1,3 +1,27 @@
+b2r2lib (1.0.1-1) oneiric; urgency=low
+
+  * Fix symlinking in GNUMakefile
+
+ -- Kalle Vahlman <kalle.vahlman@movial.com>  Fri, 16 Dec 2011 13:10:16 +0000
+
+b2r2lib (1.0-4) oneiric; urgency=low
+
+  * Add missing build-deps
+
+ -- Kalle Vahlman <kalle.vahlman@movial.com>  Fri, 16 Dec 2011 11:01:27 +0000
+
+b2r2lib (1.0-3) oneiric; urgency=low
+
+  * Fix building natively on non-snowball device
+
+ -- Kalle Vahlman <kalle.vahlman@movial.com>  Fri, 16 Dec 2011 10:43:48 +0000
+
+b2r2lib (1.0-2) oneiric; urgency=low
+
+  * Packaging changes for Launchpad
+
+ -- Kalle Vahlman <kalle.vahlman@movial.com>  Fri, 16 Dec 2011 10:04:01 +0000
+
 b2r2lib (1.0-1) unstable; urgency=low
 
   * Initial release. 
