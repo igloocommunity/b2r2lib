@@ -466,13 +466,6 @@ enum blt_flag {
      */
     BLT_FLAG_INHERIT_PRIO          = 0x2000,
     /**
-     * @brief Indicate that a background buffer for blend operation is supplied.
-     *
-     * B2R2_BLT_FLAG_PER_PIXEL_ALPHA_BLEND, B2R2_BLT_FLAG_SRC_IS_NOT_PREMULT, and
-     * B2R2_BLT_FLAG_GLOBAL_ALPHA_BLEND will control the blend operation.
-     */
-    BLT_FLAG_BG_BLEND              = 0x20000,
-    /**
      * @brief Use color look-up table for color correction.
      * Pointer to the table must be specified in *clut field of
      * the b2r2_blt_req structure.
@@ -546,14 +539,6 @@ struct blt_req {
      * @brief Source fill color or color key.
      */
     uint32_t              src_color;
-    /**
-     * @brief Background image.
-     */
-    struct blt_img        bg_img;
-    /**
-     * @brief Background area to be blitted.
-     */
-    struct blt_rect       bg_rect;
     /**
      * @brief Destination image.
      */
