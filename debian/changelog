@@ -1,3 +1,9 @@
+b2r2lib (1.0.1-2) oneiric; urgency=low
+
+  * Revert API change, we don't have that yet in the kernel side
+
+ -- Kalle Vahlman <kalle.vahlman@movial.com>  Thu, 12 Jan 2012 15:58:38 +0000
+
 b2r2lib (1.0.1-1) oneiric; urgency=low
 
   * Fix symlinking in GNUMakefile
