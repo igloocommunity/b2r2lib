@@ -1,7 +1,7 @@
 Source: b2r2lib
 Priority: extra
 Maintainer: packages@igloocommunity.org
-Build-Depends: debhelper (>= 7.0.50~), linux-headers-3.0.0-4-ux500
+Build-Depends: debhelper (>= 7.0.50~), linux-headers-3.3.0-1000-ux500
 Standards-Version: 3.9.1
 Section: libs
 Homepage: http://www.igloocommunity.org
